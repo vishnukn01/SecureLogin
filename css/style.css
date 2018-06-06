@@ -44,3 +44,11 @@ body,html {
     border: 1px solid #f5c6cb;
     margin-bottom: 15px;
 }
+
+.success {
+    padding: 5px 10px;
+    color: green;
+    background-color: #caeec0;
+    border: 1px solid #caeec0;
+    margin-bottom: 15px;
+}

@@ -119,7 +119,7 @@ class Login {
         //Token that goes into the url is run thru bin2hex()
         $url = sprintf('%sreset.php%s', ABS_URL, http_build_query([
             'selector'=>$selector,
-            'token'=>bin2hex($token)
+            'token'=>bin2hex($authenticator)
         ]));
 
          //Set token expiration
@@ -135,7 +135,7 @@ class Login {
         $insertion = $this->db->insert('password_reset', array(
             'email' => $user->email,
             'selector'=> $selector,
-            'token'=> hash('sha256', $token),
+            'token'=> hash('sha256', $authenticator),
             'expires'=> $expires->format('U') //unix timestamp
         ));
 
@@ -151,7 +151,7 @@ class Login {
             $headers .= "Content-type: text/html\r\n";
             
             //Send email
-            $send_mail = email($to, $subject, $message, $headers);
+            $send_mail = mail($to, $subject, $message, $headers);
 
             if($send_mail !== false){
                 
@@ -159,7 +159,7 @@ class Login {
                 session_destroy();
                 return array('status'=>1, 'message'=>'Check your email for the password reset link');
             }
-            return array('status'=>0,'message'=>'There was an error in send your password reset link');
+            return array('status'=>0,'message'=>'There was an error in sending your password reset link');
         } 
     }
 
