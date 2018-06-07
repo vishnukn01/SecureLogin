@@ -52,6 +52,7 @@ class Login {
         $username = $_SESSION['username'];
 
         if ( empty( $_SESSION['username'] ) && ! empty( $_COOKIE['rememberme'] ) ) {
+            
             list($selector, $authenticator) = explode(':', $_COOKIE['rememberme']);
             
             $results = $this->db->get_results("SELECT * FROM auth_tokens WHERE selector = :selector", ['selector'=>$selector]);
@@ -71,7 +72,7 @@ class Login {
             
             return true;
         }      
-        return false;      
+        return false;   
     }
 
     private function rememberme($user){
@@ -156,7 +157,8 @@ class Login {
             if($send_mail !== false){
                 
                 //To ensure user is logged out while resetting password
-                session_destroy();
+                //session_destroy();
+                $_SESSION = [];
                 return array('status'=>1, 'message'=>'Check your email for the password reset link');
             }
             return array('status'=>0,'message'=>'There was an error in sending your password reset link');
@@ -202,7 +204,8 @@ class Login {
             $delete = $this->db->delete('password_reset','email',$user->email);
 
             if($update == true){
-                session_destroy();
+                //session_destroy();
+                $_SESSION = [];
                 return array('status'=>1, 'message'=>'Password successfully reset.');
             }
         }
